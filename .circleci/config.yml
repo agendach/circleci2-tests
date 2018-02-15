@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:edge-git
+    working_directory: /app
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache bash
+      - run: echo 'export PATH="/app/make:/thisisntreal:/usr/local/bin:$PATH"' >> $BASH_ENV
+      - run: echo $PATH

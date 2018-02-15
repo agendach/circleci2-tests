@@ -4,6 +4,8 @@ jobs:
     docker:
       - image: docker:edge-git
     working_directory: /app
+    environment:
+      ENV: $BASH_ENV
     steps:
       - checkout
       - run:
@@ -11,4 +13,8 @@ jobs:
           command: |
             apk add --no-cache bash
       - run: echo 'export PATH="/app/make:/thisisntreal:/usr/local/bin:$PATH"' >> $BASH_ENV
-      - run: echo $PATH
+      - run: |
+          echo $PATH
+      - run: |
+          source $BASH_ENV
+          echo $PATH

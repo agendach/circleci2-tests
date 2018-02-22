@@ -4,17 +4,27 @@ jobs:
     docker:
       - image: docker:edge-git
     working_directory: /app
-    environment:
-      ENV: $BASH_ENV
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
             apk add --no-cache bash
-      - run: echo 'export PATH="/app/make:/thisisntreal:/usr/local/bin:$PATH"' >> $BASH_ENV
+      - run: echo 'export PATH="/app/make:$PATH"' >> $BASH_ENV
+      - restore_cache:
+          key: hello
+          paths:
+            - /tmp/docker-cache
       - run: |
-          echo $PATH
+          if [[ -f /tmp/docker-cache/hello ]]; then
+            cat /tmp/docker-cache/hello
+          fi
       - run: |
-          source $BASH_ENV
-          echo $PATH
+          mkdir -p /tmp/docker-cache
+          echo "Bonjour $CIRCLE_BUILD_NUM" >> /tmp/docker-cache/hello
+      - run: |
+          cat /tmp/docker-cache/hello
+      - save_cache:
+          key: hello
+          paths:
+            - /tmp/docker-cache

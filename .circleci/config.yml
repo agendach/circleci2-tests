@@ -12,7 +12,7 @@ jobs:
             apk add --no-cache bash
       - run: echo 'export PATH="/app/make:$PATH"' >> $BASH_ENV
       - restore_cache:
-          key: hello
+          key: hello-{{ .Branch }}
           paths:
             - /tmp/docker-cache
       - run: |
@@ -25,6 +25,6 @@ jobs:
       - run: |
           cat /tmp/docker-cache/hello
       - save_cache:
-          key: hello
+          key: hello-{{ .Branch }}-{{ epoch }}
           paths:
             - /tmp/docker-cache
